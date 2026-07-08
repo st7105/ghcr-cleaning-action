@@ -26,13 +26,3 @@ steps:
         from_secret: ghcr_token
       cache_from:
         - ghcr.io/st7105/ghcr-cleaning-action:latest
-
-  check-token-scopes:
-    image: curlimages/curl:8.10.1
-    when:
-      - event: manual
-    environment:
-      GHCR_TOKEN:
-        from_secret: ghcr_token
-    commands:
-      - curl -sI -H "Authorization: Bearer $GHCR_TOKEN" https://api.github.com/user | grep -i x-oauth-scopes
