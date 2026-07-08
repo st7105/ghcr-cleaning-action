@@ -111,6 +111,20 @@ func (s *CleaningTestSuite) TestImageValidTag() {
 	r.Empty(toDelete)
 }
 
+func (s *CleaningTestSuite) TestImageIndexReferencesMissingPackageVersion() {
+	// Compute the hashes to delete.
+	versions, images, indices := s.buildTestData(map[string]TestDataItem{
+		index1: {tags: nil, references: []string{image1}},
+	})
+
+	toDelete, err := computeHashesToDelete(nil, defaultPrFilterParams, versions, images, indices)
+
+	// Check the result.
+	r := s.Require()
+	r.NoError(err)
+	r.ElementsMatch(toDelete, []string{index1})
+}
+
 func (s *CleaningTestSuite) TestImageActivePullRequestTag() {
 	// Compute the hashes to delete.
 	versions, images, indices := s.buildTestData(map[string]TestDataItem{

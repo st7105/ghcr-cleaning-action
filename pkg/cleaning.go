@@ -142,6 +142,13 @@ func computeHashesToDelete(
 			// Get the referenced item.
 			referencedHash := manifest.Digest.String()
 			referencedItem := items[referencedHash]
+			if referencedItem == nil {
+				log.Warn().
+					Str("index-hash", hash).
+					Str("referenced-hash", referencedHash).
+					Msg("image index references an object that is not listed as a package version")
+				continue
+			}
 
 			// Add it to the current item references.
 			items[hash].references = append(items[hash].references, referencedItem)
